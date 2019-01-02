@@ -20,3 +20,15 @@ The following was used for the environment setup:
 - sklearn.neighbors (KNeighborsClassifier)
 - pickle
 - matplotlib 
+
+## File Descriptions
+The following files are located in this directory:
+- messages.csv: Origin dataset of messages (features)
+- categories.csv: Origin dataset of categories (labels)
+- README.md: This is the file you are reading now!
+- ML Pipeline Preparation.ipynb: Jupyter notebook for training and predicting model
+- ETL Pipeline Preparation.ipynb: Jupyter notebook used for processing the data
+- DisasterResponse.db: Saved database that is created after processing the dataset and training a model based off of that dataset
+- app/run.py: Executes and visualizes the dataset
+- data/process_data.py: Data cleaning pipeline that Loads the messages and categories datasets, Merges the two datasets, Cleans the data, Stores it in a SQLite database
+- model/train_classifier.py: Machine learning pipeline that, Loads data from the SQLite database, Splits the dataset into training and test sets, Builds a text processing and machine learning pipeline, Trains and tunes a model using GridSearchCV, Outputs results on the test set, Exports the final model as a pickle file
