@@ -1,5 +1,9 @@
 # Udacity - Disaster Response Pipeline
 
+## Project Overview
+Figure Eight (formerly Crowdflower) crowdsourced the tagging and translation of messages to apply artificial
+intelligence to disaster response relief. In this project, a data pipeline was prepared to take in the message data from natural disasters and apply machine learning to categorize emergency text messages based on the need communicated by the sender.
+
 ## Installation
 The following was used for the environment setup:
 - numpy 
