@@ -1,17 +1,47 @@
 import sys
-
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = pd.merge(messages, categories)
+    df_temp_id = df['id']
+    return df, df_temp_id
 
+def clean_data(df, df_temp_id):
+    categories =  df['categories'].str.split(';', expand=True).add_prefix('categories_')
+    messages = df[['message', 'id']]
+    row = categories.iloc[0]
+    category_colnames = list()
+    for x in row:
+        #print(x[0:-2])
+        category_colnames.append(x[0:-2])
+    categories.columns = category_colnames
+    for column in categories:
+        # set each value to be the last character of the string
+        categories[column] =  categories[column].str[-1]
+        # convert column from string to numeric
+        categories[column] = categories[column].astype(int)
+    # drop the original categories column from `df`
+    df.drop(['categories'], axis=1, inplace = True)
+    # concatenate the original dataframe with the new `categories` dataframe
+    categories['id'] = df['id']
 
-def clean_data(df):
-    pass
-
-
+    df = pd.merge(messages, categories)
+    # check number of duplicates
+    print(df.duplicated().sum())
+    # drop duplicates
+    df.drop_duplicates(inplace = True)
+    # check number of duplicates
+    print(df.duplicated().sum())
+    return df
+    
 def save_data(df, database_filename):
-    pass  
-
+    engine = create_engine('sqlite:///DisasterResponse.db')
+    df.to_sql('DisasterResponse', engine, index=False)
 
 def main():
     if len(sys.argv) == 4:
@@ -20,10 +50,10 @@ def main():
 
         print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'
               .format(messages_filepath, categories_filepath))
-        df = load_data(messages_filepath, categories_filepath)
+        df, df_temp_index = load_data(messages_filepath, categories_filepath)
 
         print('Cleaning data...')
-        df = clean_data(df)
+        df = clean_data(df, df_temp_index)
         
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
