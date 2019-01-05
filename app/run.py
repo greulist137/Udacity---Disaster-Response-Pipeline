@@ -14,7 +14,6 @@ from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
-
 def tokenize(text):
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
@@ -31,7 +30,18 @@ engine = create_engine('sqlite:///DisasterResponse.db')
 df =  pd.read_sql_table('DisasterResponse', engine)
 
 # load model
-model = joblib.load("finalized_model.sav")
+model = joblib.load("../finalized_model.sav")
+
+X = df.message.values
+y = df.iloc[:,5:]
+
+keys = y.columns
+my_dict = {key: None for key in keys}
+
+for key, value in my_dict.items():
+    #print(((y[key] == 1)).sum())
+    my_dict[key] = ((y[key] == 1)).sum()
+    #print(my_dict)
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
@@ -40,8 +50,10 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
+    #genre_counts = df.groupby('genre').count()['message']
+    #genre_names = list(genre_counts.index)
+    genre_counts = my_dict.keys()
+    genre_names = my_dict.values()
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
