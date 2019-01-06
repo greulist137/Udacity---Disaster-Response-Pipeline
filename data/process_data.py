@@ -5,6 +5,15 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    INPUT 
+        database_filepath - Filepath used for importing the database     
+    OUTPUT
+        Returns the following variables:
+        X - Returns the input features.  Specifically, this is returning the messages column from the dataset
+        Y - Returns the categories of the dataset.  This will be used for classification based off of the input X
+        y.keys - Just returning the columns of the Y columns
+    '''
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = pd.merge(messages, categories)
@@ -12,6 +21,13 @@ def load_data(messages_filepath, categories_filepath):
     return df, df_temp_id
 
 def clean_data(df, df_temp_id):
+    '''
+    INPUT 
+        df: Dataframe to be cleaned by the method
+        df_temp_id: the id that is to be used when merging the messages and classifications together based off of the common id
+    OUTPUT
+        df: Returns a cleaned dataframe Returns the following variables:
+    '''
     categories =  df['categories'].str.split(';', expand=True).add_prefix('categories_')
     messages = df[['message', 'id']]
     row = categories.iloc[0]
@@ -40,6 +56,13 @@ def clean_data(df, df_temp_id):
     return df
     
 def save_data(df, database_filename):
+    '''
+    INPUT 
+        df: Dataframe to be saved
+        database_filepath - Filepath used for saving the database     
+    OUTPUT
+        Saves the database
+    '''
     engine = create_engine('sqlite:///DisasterResponse.db')
     df.to_sql('DisasterResponse', engine, index=False)
 

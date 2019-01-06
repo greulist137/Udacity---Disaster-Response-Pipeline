@@ -15,6 +15,12 @@ from sqlalchemy import create_engine
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    INPUT 
+        text: Text to be processed   
+    OUTPUT
+        Returns a processed text variable that was tokenized, lower cased, stripped, and lemmatized
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -47,7 +53,6 @@ for key, value in my_dict.items():
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     #genre_counts = df.groupby('genre').count()['message']
     #genre_names = list(genre_counts.index)
     genre_counts = list(my_dict.values())
@@ -82,7 +87,6 @@ def index():
     
     # render web page with plotly graphs
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
-
 
 # web page that handles user query and displays model results
 @app.route('/go')
