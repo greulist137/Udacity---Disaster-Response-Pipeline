@@ -29,7 +29,7 @@ def load_data(database_filepath):
         Y - Returns the categories of the dataset.  This will be used for classification based off of the input X
         y.keys - Just returning the columns of the Y columns
     '''
-    engine = create_engine('sqlite:///DisasterResponse.db')
+    engine = create_engine('sqlite:///data/DisasterResponse.db')
     df =  pd.read_sql_table('DisasterResponse', engine)
     X = df.message.values
     y = df.iloc[:,5:]
@@ -68,10 +68,9 @@ def build_model(X_train,y_train):
     
     parameters = {  
         'clf__estimator__min_samples_split': [2, 4],
-        'clf__estimator__max_features': ['log2', 'auto', 'sqrt', None],
-        'clf__estimator__criterion': ['gini', 'entropy'],
-        'clf__estimator__max_depth': [None, 25, 50, 100, 150, 200],
-        
+        #'clf__estimator__max_features': ['log2', 'auto', 'sqrt', None],
+        #'clf__estimator__criterion': ['gini', 'entropy'],
+        #'clf__estimator__max_depth': [None, 25, 50, 100, 150, 200],
     }
     cv = GridSearchCV(estimator=pipeline, param_grid=parameters)
     cv.fit(X_train,y_train)
@@ -101,8 +100,9 @@ def save_model(model, model_filepath):
     OUTPUT
         While there is no specific item that is returned to its calling method, this method will save the model as a pickle file.
     '''    
-    filename = 'finalized_model.sav'
-    pickle.dump(model, open(filename, 'wb'))
+    temp_pickle = open(model_filepath, 'wb')
+    pickle.dump(model, temp_pickle)
+    temp_pickle.close()
 
 def main():
     if len(sys.argv) == 3:
@@ -119,7 +119,13 @@ def main():
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
-
+        
+        
+        ###WILL NEED TO CXLEAN THIS UP
+        print('TYPE OF MODEL')
+        print(type(model))
+        
+        
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
 

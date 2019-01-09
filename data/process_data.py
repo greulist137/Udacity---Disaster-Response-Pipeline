@@ -29,7 +29,7 @@ def clean_data(df, df_temp_id):
         df: Returns a cleaned dataframe Returns the following variables:
     '''
     categories =  df['categories'].str.split(';', expand=True).add_prefix('categories_')
-    messages = df[['message', 'id']]
+    messages = df[['message', 'genre', 'id']]
     row = categories.iloc[0]
     category_colnames = list()
     for x in row:
@@ -63,7 +63,7 @@ def save_data(df, database_filename):
     OUTPUT
         Saves the database
     '''
-    engine = create_engine('sqlite:///DisasterResponse.db')
+    engine = create_engine('sqlite:///data//DisasterResponse.db')
     df.to_sql('DisasterResponse', engine, index=False)
 
 def main():
